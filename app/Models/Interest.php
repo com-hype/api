@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserHobbies extends Model
+class Interest extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'hobbies',
+        'name',
     ];
 
-    public function user()
+    public function interestable()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 }

@@ -48,8 +48,29 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function hobbies()
+
+    public function interests()
     {
-        return $this->hasOne(UserHobbies::class);
+        return $this->morphToMany(Interest::class, 'interestable');
+    }
+
+    public function project()
+    {
+        return $this->hasOne(Project::class);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class)->where('type', 'like');
+    }
+
+    public function dislikes()
+    {
+        return $this->hasMany(Like::class)->where('type', 'dislike');
+    }
+
+    public function actions()
+    {
+        return $this->hasMany(Like::class);
     }
 }

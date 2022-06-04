@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user_hobbies', function (Blueprint $table) {
+        Schema::create('interestables', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
+            $table->foreignId('interest_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->string('hobbies');
+            $table->morphs('interestable');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_hobbies');
+        Schema::dropIfExists('interestables');
     }
 };
