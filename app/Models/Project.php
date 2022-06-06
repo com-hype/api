@@ -38,4 +38,8 @@ class Project extends Model
     {
         return $this->morphMany(Like::class, 'likeable')->where('action', 'dislike');
     }
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
 }

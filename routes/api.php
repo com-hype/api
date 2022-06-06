@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\{
     AuthenticationController,
+    ImageController,
     UserController,
     ProjectController,
 };
@@ -26,4 +27,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get("projects", [ProjectController::class, 'index']);
     Route::post("projects/{project}/like", [ProjectController::class, 'like']);
+    Route::post("upload/image", [ImageController::class, 'upload']);
 });

@@ -13,8 +13,9 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'title' => 'required|string|max:50',
-            'description' => 'required|string|max:255',
+            'title' => 'required|string|max:40',
+            'avatar' => 'image|mimes:jpeg,png,jpg',
+            'description' => 'required|string|max:150',
             'categories' => 'required|string',
             'type' => 'required|in:find_partner,build_network,raise_funds',
         ]);
@@ -24,13 +25,21 @@ class UserController extends Controller
                 'error' => "USER_ALREADY_REGISTERED",
             ], 400);
         }
-        // cloudinary()->upload($request->file('file')->getRealPath())->getSecurePath();
+
+        if (!empty($request->avatar)) {
+            $avatar = cloudinary()->upload($request->file('avatar')->getRealPath(), [
+                'folder' => 'avatars'
+            ])->getSecurePath();
+        } else {
+            $avatar = null;
+        }
 
         $project = auth()->user()->project()->create([
             'name' => $request->name,
             'title' => $request->title,
             'description' => $request->description,
             'type' => $request->type,
+            'avatar' => $avatar,
         ]);
 
         $categories = explode(',', $request->categories);

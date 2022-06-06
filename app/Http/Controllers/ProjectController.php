@@ -15,12 +15,15 @@ class ProjectController extends Controller
             $query->whereIn('interest_id', $user_interests->pluck('id'));
         })->get();
 
-        // remove projects that the user has already liked
-        $projects = $projects->filter(function ($project) {
-            return !auth()->user()->actions()->where('likeable_id', $project->id)->where('likeable_type', 'App\Models\Project')->count();
-        });
+        $projectsFiltered = [];
+        foreach ($projects as $project) {
+            $isAnswered = $project->action()->where('user_id', auth()->user()->id)->first();
+            if (!$isAnswered) {
+                $projectsFiltered[] = $project;
+            }
+        }
 
-        return response()->json($projects);
+        return response()->json($projectsFiltered);
     }
 
     public function like(Request $request, Project $project)
