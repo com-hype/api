@@ -17,7 +17,9 @@ class UserController extends Controller
             'avatar' => 'image|mimes:jpeg,png,jpg',
             'description' => 'required|string|max:150',
             'categories' => 'required|string',
-            'type' => 'required|in:find_partner,build_network,raise_funds',
+
+            'crowdfunding_description' => 'required|string',
+            'crowdfunding_goal' => 'required|integer',
         ]);
 
         if (auth()->user()->status !== 'in_registration') {
@@ -38,7 +40,6 @@ class UserController extends Controller
             'name' => $request->name,
             'title' => $request->title,
             'description' => $request->description,
-            'type' => $request->type,
             'avatar' => $avatar,
         ]);
 
@@ -53,6 +54,11 @@ class UserController extends Controller
             }
             $project->categories()->save($categorie); //sync
         }
+
+        $project->crowdfunding()->create([
+            'description' => $request->crowdfunding_description,
+            'goal' => $request->crowdfunding_goal,
+        ]);
 
         auth()->user()->update([
             'type' => 'presenter',

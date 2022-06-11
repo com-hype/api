@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('crowdfundings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
+            $table->foreignId('project_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->string('name');
-            $table->string('title');
-            $table->string('description');
-            $table->string('avatar')->nullable();
+            $table->longText('description')->nullable();
+            $table->float('goal');
+            $table->string('currency')->default('EUR');
+            $table->float('amount')->default(0);
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('crowdfundings');
     }
 };

@@ -26,12 +26,31 @@ class ImageController extends Controller
             'folder' => 'projects'
         ])->getSecurePath();
 
-        auth()->user()->project->images()->create([
+        $newImage = auth()->user()->project->images()->create([
             'url' => $image_path,
         ]);
 
         return response()->json([
-            'status' => 'ok',
+            'image' => $newImage
+        ]);
+    }
+
+    public function replace(Request $request, Image $image)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg',
+        ]);
+
+        $image_path = cloudinary()->upload($request->file('image')->getRealPath(), [
+            'folder' => 'projects'
+        ])->getSecurePath();
+
+        $image->update([
+            'url' => $image_path,
+        ]);
+
+        return response()->json([
+            'image' => $image
         ]);
     }
 }

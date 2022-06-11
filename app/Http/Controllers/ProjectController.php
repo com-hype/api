@@ -19,7 +19,8 @@ class ProjectController extends Controller
         foreach ($projects as $project) {
             $isAnswered = $project->action()->where('user_id', auth()->user()->id)->first();
             if (!$isAnswered) {
-                $projectsFiltered[] = $project;
+
+                $projectsFiltered[] = ['info' => $project, 'images' => $project->images, 'crowdfunding' => $project->crowdfunding];
             }
         }
 
@@ -54,5 +55,12 @@ class ProjectController extends Controller
         ]);
 
         return response()->json(['status' => 'ok']);
+    }
+
+    public function get()
+    {
+        $project = auth()->user()->project;
+
+        return response()->json(['info' => $project, 'images' => $project->images]);
     }
 }

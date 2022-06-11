@@ -24,11 +24,16 @@ class ProjectsSeeder extends Seeder
                 'name' => $faker->company(),
                 'title' => $faker->realText($maxNbChars = 20, $indexSize = 2),
                 'description' => $faker->realText(),
-                'avatar' => "https://picsum.photos/80",
-                'type' => 'raise_funds',
+                'avatar' => $faker->imageUrl(100, 100),
             ]);
-            $interests = Interest::all()->random(3);
 
+            for ($j = 0; $j < rand(1, 9); $j++) {
+                $project->images()->create([
+                    'url' => $faker->imageUrl(300, 300),
+                ]);
+            }
+
+            $interests = Interest::all()->random(4);
             foreach ($interests as $interest) {
                 $project->categories()->attach($interest->id);
             }

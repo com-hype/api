@@ -42,4 +42,8 @@ class Project extends Model
     {
         return $this->morphMany(Image::class, 'imageable');
     }
+    public function crowdfunding()
+    {
+        return $this->hasOne(Crowdfunding::class);
+    }
 }

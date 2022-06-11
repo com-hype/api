@@ -34,6 +34,7 @@ class AuthenticationController extends Controller
             'email' => $request->email,
             'birthdate' => $request->birthdate,
             'password' => Hash::make($request->password),
+            'status' => 'in_registration',
         ]);
 
         $token = $user->createToken($request->device_name)->plainTextToken;
