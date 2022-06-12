@@ -27,6 +27,11 @@ class ProjectsSeeder extends Seeder
                 'avatar' => $faker->imageUrl(100, 100),
             ]);
 
+            $project->crowdfunding()->create([
+                'goal' => $faker->numberBetween(3000, 50000),
+                'description' => $faker->realText(),
+            ]);
+
             for ($j = 0; $j < rand(1, 9); $j++) {
                 $project->images()->create([
                     'url' => $faker->imageUrl(300, 300),
