@@ -34,3 +34,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post("payment/intent", [CrowdfundingController::class, 'intent']);
 });
+
+
+
+// WEBHOOKS
+Route::post("payment/webhook", [CrowdfundingController::class, 'webhook']);
