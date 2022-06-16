@@ -46,4 +46,9 @@ class Project extends Model
     {
         return $this->hasOne(Crowdfunding::class);
     }
+
+    public function features()
+    {
+        return $this->hasMany(Feature::class);
+    }
 }
