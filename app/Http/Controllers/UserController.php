@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Interest;
+use App\Models\Project;
 use App\Models\UserHobbies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -98,5 +99,26 @@ class UserController extends Controller
             'status' => 'active',
         ]);
         return ["user" => auth()->user(), "interests" => auth()->user()->interests];
+    }
+
+    public function likedProject()
+    {
+        $likes = auth()->user()->likes()->get();
+        $projects = [];
+        foreach ($likes as $like) {
+            if ($like->likeable_type == 'App\Models\Project') {
+
+                $tmp_project = Project::find($like->likeable_id);
+                $projects[] = [
+                    'info' => $tmp_project,
+                    'images' => $tmp_project->images()->get(),
+                ];
+            }
+        }
+
+        return response()->json(
+            $projects,
+            200
+        );
     }
 }

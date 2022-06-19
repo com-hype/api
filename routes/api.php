@@ -26,14 +26,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get("auth/me", [AuthenticationController::class, 'me']);
     Route::delete("auth/logout", [AuthenticationController::class, 'logout']);
 
+
     Route::get("projects", [ProjectController::class, 'index']);
+    Route::get("projects/liked", [UserController::class, 'likedProject']);
+
     Route::get("projects/me", [ProjectController::class, 'get']);
     Route::get("projects/me/stats", [ProjectController::class, 'getStats']);
+
     Route::get("projects/{project}", [ProjectController::class, 'getProject']);
     Route::get("projects/{project}/crowdfunding", [ProjectController::class, 'getCrowdfunding']);
     Route::post("projects/{project}/like", [ProjectController::class, 'like']);
     Route::get("projects/{project}/features", [ProjectController::class, 'getFeatures']);
     Route::post("projects/{project}/features", [ProjectController::class, 'editFeatures']);
+
     Route::post("upload/image", [ImageController::class, 'upload']);
     Route::post("upload/image/{image}", [ImageController::class, 'replace']);
 

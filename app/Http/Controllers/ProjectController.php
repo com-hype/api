@@ -19,8 +19,7 @@ class ProjectController extends Controller
         foreach ($projects as $project) {
             $isAnswered = $project->action()->where('user_id', auth()->user()->id)->first();
             if (!$isAnswered) {
-
-                $projectsFiltered[] = ['info' => $project, 'images' => $project->images, 'crowdfunding' => $project->crowdfunding, 'features' => $project->features];
+                $projectsFiltered[] = ['info' => $project, 'images' => $project->images, 'crowdfunding' => $project->crowdfunding, 'features' => $project->features, 'categories' => $project->categories];
             }
         }
 
@@ -61,17 +60,29 @@ class ProjectController extends Controller
     {
         $project = auth()->user()->project;
 
-        // récupère le nombre de like par heure dans la journée
-        $likes = $project->action()->where('action', 'like')->where('created_at', '>=', now()->startOfDay())->get();
+
+        $likes = $project->likes()->where('created_at', '>=', now()->startOfDay())->get();
         $likesByHour = $likes->groupBy(function ($item) {
             return $item->created_at->format('H');
+        });
+
+        $likesByDay = $likes->groupBy(function ($item) {
+            return $item->created_at->format('l');
+        });
+
+        $likesByMonth = $likes->groupBy(function ($item) {
+            return $item->created_at->format('F');
         });
 
         return response()->json([
             'likes' => [
                 'byHour' => $likesByHour,
+                'byWeek' => $likesByDay,
+                'byMonth' => $likesByMonth,
                 'total' => $likes->count(),
-            ]
+            ],
+            'prints' => $project->likes()->count() + $project->dislikes()->count(),
+            'amount' => $project->crowdfunding->amount,
         ]);
     }
 
@@ -79,12 +90,12 @@ class ProjectController extends Controller
     {
         $project = auth()->user()->project;
 
-        return response()->json(['info' => $project, 'images' => $project->images, 'crowdfunding' => $project->crowdfunding, 'features' => $project->features]);
+        return response()->json(['info' => $project, 'images' => $project->images, 'crowdfunding' => $project->crowdfunding, 'features' => $project->features, 'categories' => $project->categories]);
     }
 
     public function getProject(Project $project)
     {
-        return response()->json(['info' => $project, 'images' => $project->images, 'crowdfunding' => $project->crowdfunding, 'features' => $project->features, 'isYourProject' => auth()->user()->id === $project->user_id]);
+        return response()->json(['info' => $project, 'images' => $project->images, 'crowdfunding' => $project->crowdfunding, 'features' => $project->features, 'isYourProject' => auth()->user()->id === $project->user_id, 'categories' => $project->categories]);
     }
 
     public function getCrowdfunding(Project $project)
