@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('features', function (Blueprint $table) {
+        Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')
+            $table->longText('body');
+            $table->foreignId('discussion_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->string('name');
-            $table->longText('description')->nullable();
+            $table->morphs('messageable');
+            $table->boolean('is_read')->default(false);
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('features');
+        Schema::dropIfExists('messages');
     }
 };

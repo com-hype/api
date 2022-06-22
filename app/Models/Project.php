@@ -51,4 +51,14 @@ class Project extends Model
     {
         return $this->hasMany(Feature::class);
     }
+
+    public function messages()
+    {
+        return $this->morphMany(Message::class, 'messageable');
+    }
+
+    public function discussions()
+    {
+        return $this->hasMany(Discussion::class);
+    }
 }

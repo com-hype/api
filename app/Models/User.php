@@ -79,4 +79,14 @@ class User extends Authenticatable
     {
         return $this->morphOne(Image::class, 'imageable');
     }
+
+    public function discussions()
+    {
+        DiscussionMember::where('user_id', $this->id)->get();
+    }
+
+    public function messages()
+    {
+        return $this->morphMany(Message::class, 'messageable');
+    }
 }

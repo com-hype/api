@@ -3,6 +3,7 @@
 use App\Http\Controllers\{
     AuthenticationController,
     CrowdfundingController,
+    DiscussionController,
     ImageController,
     UserController,
     ProjectController,
@@ -26,7 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get("auth/me", [AuthenticationController::class, 'me']);
     Route::delete("auth/logout", [AuthenticationController::class, 'logout']);
 
-
     Route::get("projects", [ProjectController::class, 'index']);
     Route::get("projects/liked", [UserController::class, 'likedProject']);
 
@@ -43,6 +43,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post("upload/image/{image}", [ImageController::class, 'replace']);
 
     Route::post("payment/intent", [CrowdfundingController::class, 'intent']);
+
+    Route::get("discussions", [DiscussionController::class, 'getDiscussions']);
+    Route::post("discussions", [DiscussionController::class, 'create']);
+    Route::get("discussions/{discussion}/messages", [DiscussionController::class, 'getMessages']);
+    Route::post("discussions/{discussion}/messages", [DiscussionController::class, 'createMessage']);
 });
 
 

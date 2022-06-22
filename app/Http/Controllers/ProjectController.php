@@ -95,7 +95,15 @@ class ProjectController extends Controller
 
     public function getProject(Project $project)
     {
-        return response()->json(['info' => $project, 'images' => $project->images, 'crowdfunding' => $project->crowdfunding, 'features' => $project->features, 'isYourProject' => auth()->user()->id === $project->user_id, 'categories' => $project->categories]);
+        return response()->json([
+            'info' => $project,
+            'images' => $project->images,
+            'crowdfunding' => $project->crowdfunding,
+            'features' => $project->features,
+            'isYourProject' => auth()->user()->id === $project->user_id,
+            'categories' => $project->categories,
+            'author' => $project->user,
+        ]);
     }
 
     public function getCrowdfunding(Project $project)
