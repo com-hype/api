@@ -126,7 +126,7 @@ class DiscussionController extends Controller
             if ($member->user_id !== auth()->user()->id) {
                 event(new ReceiveMessage(
                     auth()->user()->username,
-                    auth()->user(),
+                    $member->user,
                     $formatedMessage
                 ));
             }
