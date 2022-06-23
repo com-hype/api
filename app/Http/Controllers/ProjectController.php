@@ -102,7 +102,7 @@ class ProjectController extends Controller
             'features' => $project->features,
             'isYourProject' => auth()->user()->id === $project->user_id,
             'categories' => $project->categories,
-            'author' => $project->user,
+            'author' => User::find($project->user_id),
         ]);
     }
 
