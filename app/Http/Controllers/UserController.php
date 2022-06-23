@@ -53,6 +53,7 @@ class UserController extends Controller
                     'name' => $categorieName,
                 ]);
             }
+            auth()->user()->interests()->save($categorie);
             $project->categories()->save($categorie); //sync
         }
 
