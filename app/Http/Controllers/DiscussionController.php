@@ -71,9 +71,7 @@ class DiscussionController extends Controller
 
         $title = $discussion->members()->where('user_id', '!=', auth()->user()->id)->first()->user->username;
 
-
         $discussion->messages()
-            ->where('messageable_type', 'App\Models\User')
             ->where('messageable_id', '!=', auth()->user()->id)
             ->update(['is_read' => true]);
 
