@@ -25,7 +25,7 @@ class DiscussionController extends Controller
             $formatedDiscussions[] = [
                 'id' => $discussion->id,
                 'title' => $title,
-                'newMessage' => $lastMassage ? $lastMassage->is_read : false,
+                'newMessage' => $lastMassage && !$lastMassage->is_read ? true : false,
                 'lastMessage' =>  $lastMassage ? $lastMassage : "",
                 'created_at' => $lastMassage ? $lastMassage->created_at : $discussion->created_at,
             ];
@@ -70,6 +70,11 @@ class DiscussionController extends Controller
         }
 
         $title = $discussion->members()->where('user_id', '!=', auth()->user()->id)->first()->user->username;
+
+
+        $discussion->messages()->update([
+            'is_read' => true,
+        ]);
 
         $formatedMessages = [];
         foreach ($discussion->messages()->latest()->get() as $message) {
