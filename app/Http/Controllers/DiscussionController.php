@@ -71,12 +71,10 @@ class DiscussionController extends Controller
 
         $title = $discussion->members()->where('user_id', '!=', auth()->user()->id)->first()->user->username;
 
-        foreach ($discussion->messages as $message) {
-            if ($message->messageable_id != auth()->user()->id && $message->messageable_type == 'App\Models\User') {
-                $message->is_read = true;
-                $message->save();
-            }
-        }
+
+        $discussion->messages()
+            ->where('messageable_id', '!=', auth()->user()->id)
+            ->update(['is_read' => true]);
 
         $formatedMessages = [];
         foreach ($discussion->messages()->latest()->get() as $message) {
@@ -115,6 +113,7 @@ class DiscussionController extends Controller
         $message = $request->user()->messages()->create([
             'discussion_id' => $discussion->id,
             'body' => $request->body,
+            'is_read' => false,
         ]);
 
         $formatedMessage = [
