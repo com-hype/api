@@ -71,9 +71,12 @@ class DiscussionController extends Controller
 
         $title = $discussion->members()->where('user_id', '!=', auth()->user()->id)->first()->user->username;
 
-        $discussion->messages()
-            ->where('messageable_id', '!=', auth()->user()->id)
-            ->update(['is_read' => true]);
+        foreach ($discussion->messages as $message) {
+            if ($message->messageable_id != auth()->user()->id && $message->messageable_type == 'App\Models\User') {
+                $message->is_read = true;
+                $message->save();
+            }
+        }
 
         $formatedMessages = [];
         foreach ($discussion->messages()->latest()->get() as $message) {
