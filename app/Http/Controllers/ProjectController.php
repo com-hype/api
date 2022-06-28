@@ -61,28 +61,53 @@ class ProjectController extends Controller
         $project = auth()->user()->project;
 
 
-        $likes = $project->likes()->where('created_at', '>=', now()->startOfDay())->get();
-        $likesByHour = $likes->groupBy(function ($item) {
-            return $item->created_at->format('H');
-        });
+        $likes = $project->likes;
 
-        $likesByDay = $likes->groupBy(function ($item) {
-            return $item->created_at->format('l');
-        });
+        $likesByHour = [];
+        $likesByDay = [];
+        $likesByMonth = [];
+        for ($i = 0; $i < 24; $i++) {
+            $tmp_hour = date('Y-m-d H:i:s', strtotime('-' . $i . ' hours'));
 
-        $likesByMonth = $likes->groupBy(function ($item) {
-            return $item->created_at->format('F');
-        });
+            $likesByHour[] = [
+                'title' => date('H:i', strtotime($tmp_hour)),
+                'likes' => $likes->where('created_at', '>=', $tmp_hour)
+                    ->where('created_at', '<', date('Y-m-d H:i:s', strtotime($tmp_hour . ' +1 hour')))
+                    ->count(),
+            ];
+        }
+
+        for ($i = 0; $i <= 7; $i++) {
+            $tmp_day = date('Y-m-d', strtotime('-' . $i . ' days'));
+
+            $likesByDay[] = [
+                'title' => date('d/m', strtotime($tmp_day)),
+                'likes' => $likes->where('created_at', '>=', $tmp_day)
+                    ->where('created_at', '<', date('Y-m-d', strtotime($tmp_day . ' +1 day')))
+                    ->count(),
+            ];
+        }
+
+        for ($i = 0; $i <= 12; $i++) {
+            $tmp_month = date('Y-m', strtotime('-' . $i . ' months'));
+
+            $likesByMonth[] = [
+                'title' => date('m/Y', strtotime($tmp_month)),
+                'likes' => $likes->where('created_at', '>=', $tmp_month)
+                    ->where('created_at', '<', date('Y-m', strtotime($tmp_month . ' +1 month')))
+                    ->count(),
+            ];
+        }
 
         return response()->json([
             'likes' => [
-                'byHour' => $likesByHour,
-                'byWeek' => $likesByDay,
-                'byMonth' => $likesByMonth,
+                'day' => $likesByHour,
+                'week' => $likesByDay,
+                'month' => $likesByMonth,
                 'total' => $likes->count(),
             ],
             'prints' => $project->likes()->count() + $project->dislikes()->count(),
-            'amount' => $project->crowdfunding->amount,
+            'amount' => $project->crowdfunding->amount
         ]);
     }
 
