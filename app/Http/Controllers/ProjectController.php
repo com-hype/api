@@ -64,46 +64,55 @@ class ProjectController extends Controller
         $likes = $project->likes;
 
         $likesByHour = [];
+        $likesByHourLabel = [];
         $likesByDay = [];
+        $likesByDayLabel = [];
         $likesByMonth = [];
+        $likesByMonthLabel = [];
         for ($i = 0; $i < 24; $i++) {
             $tmp_hour = date('Y-m-d H:i:s', strtotime('-' . $i . ' hours'));
 
-            $likesByHour[] = [
-                'title' => date('H:i', strtotime($tmp_hour)),
-                'likes' => $likes->where('created_at', '>=', $tmp_hour)
+            $likesByHour[] = $likes->where('created_at', '>=', $tmp_hour)
                     ->where('created_at', '<', date('Y-m-d H:i:s', strtotime($tmp_hour . ' +1 hour')))
-                    ->count(),
-            ];
+                    ->count();
+
+            $likesByHourLabel[] = date('H:i', strtotime($tmp_hour)),
         }
 
         for ($i = 0; $i <= 7; $i++) {
             $tmp_day = date('Y-m-d', strtotime('-' . $i . ' days'));
 
-            $likesByDay[] = [
-                'title' => date('d/m', strtotime($tmp_day)),
-                'likes' => $likes->where('created_at', '>=', $tmp_day)
-                    ->where('created_at', '<', date('Y-m-d', strtotime($tmp_day . ' +1 day')))
-                    ->count(),
-            ];
+            $likesByDay[] = $likes->where('created_at', '>=', $tmp_day)
+                ->where('created_at', '<', date('Y-m-d', strtotime($tmp_day . ' +1 day')))
+                ->count();
+
+            $likesByDayLabel[] = date('d/m', strtotime($tmp_day));
+
         }
 
         for ($i = 0; $i <= 12; $i++) {
             $tmp_month = date('Y-m', strtotime('-' . $i . ' months'));
 
-            $likesByMonth[] = [
-                'title' => date('m/Y', strtotime($tmp_month)),
-                'likes' => $likes->where('created_at', '>=', $tmp_month)
+            $likesByMonth[] = $likes->where('created_at', '>=', $tmp_month)
                     ->where('created_at', '<', date('Y-m', strtotime($tmp_month . ' +1 month')))
-                    ->count(),
-            ];
+                    ->count();
+            $likesByMonthLabel[] = date('m/Y', strtotime($tmp_month));
         }
 
         return response()->json([
             'likes' => [
-                'day' => $likesByHour,
-                'week' => $likesByDay,
-                'month' => $likesByMonth,
+                'day' =>[
+                    'labels' => $likesByDayLabel,
+                    'data' => $likesByDay,
+                ],
+                'week' => [
+                    'labels' => $likesByDayLabel,
+                    'data' => $likesByDay,
+                ],
+                'month' => [
+                    'labels' => $likesByMonthLabel,
+                    'data' => $likesByMonth,
+                ],
                 'total' => $likes->count(),
             ],
             'prints' => $project->likes()->count() + $project->dislikes()->count(),
