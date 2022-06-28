@@ -41,7 +41,7 @@ Comhype is a crowdfunding mobile application allowing project leaders to get a f
 
 ## 🔗 Links
 
--   [📚 API Documentation](https://dantin.stoplight.io/studio/comhype)
+-   [📚 API Documentation](https://dantin.stoplight.io/docs/comhype)
 -   [🚀 API Production](https://comhype.herokuapp.com)
 
 ## 📝 Crédits
