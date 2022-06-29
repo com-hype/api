@@ -102,16 +102,16 @@ class ProjectController extends Controller
         return response()->json([
             'likes' => [
                 'day' => [
-                    'labels' => $likesByHourLabel,
-                    'data' => $likesByHour
+                    'labels' => array_reverse($likesByHourLabel),
+                    'data' => array_reverse($likesByHour)
                 ],
                 'week' => [
-                    'labels' => $likesByDayLabel,
-                    'data' => $likesByDay,
+                    'labels' => array_reverse($likesByDayLabel),
+                    'data' => array_reverse($likesByDay),
                 ],
                 'month' => [
-                    'labels' => $likesByMonthLabel,
-                    'data' => $likesByMonth,
+                    'labels' => array_reverse($likesByMonthLabel),
+                    'data' => array_reverse($likesByMonth),
                 ],
                 'total' => $likes->count(),
             ],
