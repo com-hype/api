@@ -101,8 +101,8 @@ class ProjectController extends Controller
         return response()->json([
             'likes' => [
                 'day' => [
-                    'labels' => $likesByHour,
-                    'data' => $likesByHourLabel,
+                    'labels' => $likesByHourLabel,
+                    'data' => $likesByHour
                 ],
                 'week' => [
                     'labels' => $likesByDayLabel,
