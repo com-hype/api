@@ -69,7 +69,7 @@ class ProjectController extends Controller
         $likesByDayLabel = [];
         $likesByMonth = [];
         $likesByMonthLabel = [];
-        for ($i = 0; $i < 24; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $tmp_hour = date('Y-m-d H:i:s', strtotime('-' . $i . ' hours'));
 
             $likesByHour[] = $likes->where('created_at', '>=', $tmp_hour)
@@ -79,7 +79,7 @@ class ProjectController extends Controller
             $likesByHourLabel[] = date('H:i', strtotime($tmp_hour));
         }
 
-        for ($i = 0; $i <= 7; $i++) {
+        for ($i = 0; $i <= 5; $i++) {
             $tmp_day = date('Y-m-d', strtotime('-' . $i . ' days'));
 
             $likesByDay[] = $likes->where('created_at', '>=', $tmp_day)
@@ -89,13 +89,14 @@ class ProjectController extends Controller
             $likesByDayLabel[] = date('d/m', strtotime($tmp_day));
         }
 
-        for ($i = 0; $i <= 12; $i++) {
+        for ($i = 0; $i <= 5; $i++) {
             $tmp_month = date('Y-m', strtotime('-' . $i . ' months'));
 
             $likesByMonth[] = $likes->where('created_at', '>=', $tmp_month)
                 ->where('created_at', '<', date('Y-m', strtotime($tmp_month . ' +1 month')))
                 ->count();
-            $likesByMonthLabel[] = date('m/Y', strtotime($tmp_month));
+
+            $likesByMonthLabel[] = date('m', strtotime($tmp_month));
         }
 
         return response()->json([
